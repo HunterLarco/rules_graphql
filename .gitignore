@@ -1,0 +1,38 @@
+# Bazel's MODULE lockfile isn't ready to check in yet as of Bazel 7.1. Do allow
+# for it to be created, however, since it gives a performance boost for local
+# development.
+#
+# https://github.com/bazelbuild/bazel/issues/19026
+# https://github.com/bazelbuild/bazel/issues/19621
+# https://github.com/bazelbuild/bazel/issues/19971
+# https://github.com/bazelbuild/bazel/issues/20272
+# https://github.com/bazelbuild/bazel/issues/20369
+MODULE.bazel.lock
+
+# Bazel artifact directories.
+bazel-*
+
+# Bazel customization
+user.bazelrc
+
+# Javascript Dependencies
+node_modules/
+.pnpm-*
+
+# Operating Systems
+.DS_Store
+
+# Editors
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+*.launch
+*.sublime-workspace
+*.swp
+.c9/
+.classpath
+.project
+.settings/
+.vscode/*
+/.idea
