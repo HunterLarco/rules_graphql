@@ -1,0 +1,10 @@
+type Baz {
+  dateCreated: DateTime!
+}
+
+# Transitive dependencies which aren't used by the bundle shouldn't be included.
+type ExtraDepShouldNotBeBundled {
+  id: ID!
+}
+
+scalar DateTime

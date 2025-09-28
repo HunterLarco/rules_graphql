@@ -1,0 +1,5 @@
+bazel_dep(name = "rules_graphql", version = "0.0.0", dev_dependency = True)
+local_path_override(
+    module_name = "rules_graphql",
+    path = "../..",
+)

@@ -1,0 +1,5 @@
+#import './Baz.graphql'
+
+type Bar {
+  baz: Baz
+}

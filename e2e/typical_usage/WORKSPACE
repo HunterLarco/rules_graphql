@@ -1,0 +1,6 @@
+workspace(name = "e2e_typical_usage")
+
+local_repository(
+    name = "rules_graphql",
+    path = "../..",
+)

@@ -1,0 +1,9 @@
+#import 'custom-bar-import'
+
+type Foo {
+  id: ID!
+
+  name: String
+
+  bar: Bar
+}

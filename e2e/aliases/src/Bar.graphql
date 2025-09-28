@@ -1,0 +1,5 @@
+type Bar {
+  id: ID!
+
+  name: String
+}

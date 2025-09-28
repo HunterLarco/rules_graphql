@@ -1,0 +1,5 @@
+#import "@/Foo.graphql"
+
+type Query {
+  allFoo: [Foo!]!
+}

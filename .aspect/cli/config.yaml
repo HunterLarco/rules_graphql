@@ -1,0 +1,12 @@
+configure:
+  languages:
+    javascript: true
+  plugins:
+    - .aspect/cli/package-json-scripts.star
+lint:
+  aspects:
+    - //tools/lint:linters.bzl%eslint
+plugins:
+  - name: fix-visibility
+    from: github.com/aspect-build/plugin-fix-visibility
+    version: v0.1.0

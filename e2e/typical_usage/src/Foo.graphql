@@ -1,0 +1,9 @@
+#import './Bar.graphql'
+
+type Foo {
+  id: ID!
+
+  name: String
+
+  bar: Bar
+}
