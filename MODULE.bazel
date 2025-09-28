@@ -21,6 +21,7 @@ use_repo(multitool, "multitool")
 # Fixed version of pnpm for consistency.
 pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
 use_repo(pnpm, "pnpm")
+
 pnpm.pnpm(pnpm_version = "9.15.9")
 
 # npm package manager

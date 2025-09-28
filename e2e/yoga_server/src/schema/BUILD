@@ -16,13 +16,13 @@ graphql_library(
     name = "Query",
     srcs = ["Query.graphql"],
     deps = [
-      ":CurrentUser",
-      ":PublicUser",
+        ":CurrentUser",
+        ":PublicUser",
     ],
 )
 
 graphql_bundle(
     name = "bundle",
     srcs = [":Query"],
-    tree_shake = True
+    tree_shake = True,
 )
