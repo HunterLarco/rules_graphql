@@ -24,4 +24,5 @@ graphql_library(
 graphql_bundle(
     name = "bundle",
     srcs = [":Query"],
+    tree_shake = True
 )

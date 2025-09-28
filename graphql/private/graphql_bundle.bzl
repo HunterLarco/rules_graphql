@@ -17,7 +17,7 @@ def _graphql_bundle_implementation(ctx):
     arguments.add("--silent")
     for key, value in ctx.attr.aliases.items():
         arguments.add("--alias", "{}={}".format(key, value))
-    if not ctx.attr.shake:
+    if not ctx.attr.tree_shake:
         arguments.add("--no-shake")
 
     ctx.actions.run(
@@ -60,7 +60,7 @@ graphql_bundle = rule(
         ),
         "deps": attr.label_list(providers = [GraphqlInfo]),
         "aliases": attr.string_dict(),
-        "shake": attr.bool(default = False),
+        "tree_shake": attr.bool(default = False),
         "_graphql_buddy": attr.label(
             executable = True,
             cfg = "exec",
