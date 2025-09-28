@@ -1,5 +1,5 @@
 load("@aspect_rules_js//js:defs.bzl", "js_library")
-load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_graphql_npm//:defs.bzl", "npm_link_all_packages")
 
 # A workaround for gazelle.
 #

@@ -1,11 +1,11 @@
 # Bazel rules for GraphQL
 
 This ruleset is a Bazel integration for GraphQL, based on the excellent tools
-provided by [The Guild]
+provided by [The Guild].
 
 [The Guild]: http://the-guild.dev/
 
-rules_graphql is just one part of the wider bazel ecosystem. For additional
+`rules_graphql` is just one part of the wider bazel ecosystem. For additional
 build rules we suggest visiting with [Bazel Central Registry] or consider
 [Aspect]'s robust monorepo developer platform:
 

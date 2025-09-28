@@ -13,7 +13,7 @@ included `.envrc` automates this for you.
 load("@bazel_env.bzl", "bazel_env")
 load("@bazelrc-preset.bzl", "bazelrc_preset")
 load("@multitool//:tools.bzl", MULTITOOL_TOOLS = "TOOLS")
-load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_graphql_npm//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
 

@@ -1,0 +1,12 @@
+type CurrentUser {
+  id: ID!
+
+  dateCreated: DateTime!
+
+  displayName: String!
+
+  fullName: String!
+  email: String!
+}
+
+scalar DateTime
