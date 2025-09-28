@@ -1,9 +1,0 @@
-#import "./Foo.graphql"
-
-type Mutation {
-  addFoo(foo: FooInput!): Foo!
-}
-
-input FooInput {
-  name: String
-}
