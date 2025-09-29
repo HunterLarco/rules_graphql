@@ -38,6 +38,8 @@ jobs:
         ["."]
       exclude: |
         [{"bzlmodEnabled": false}]
+      # We don't support windows.
+      exclude_windows: true
       # bazelrc-preset is by design pinned to the bazel version running it.
       # Because our tests run a matrix it is guaranteed to fail on at least one
       # bazel version. We skip it here and instead run it in our format job as
@@ -53,6 +55,8 @@ jobs:
         ["e2e/bzlmod"]
       exclude: |
         [{"bzlmodEnabled": false}]
+      # We don't support windows.
+      exclude_windows: true
 
   # For branch protection settings, this job provides a "stable" name that can
   # be used to gate PR merges on "all matrix jobs were successful".
