@@ -4,6 +4,15 @@ common --@aspect_rules_ts//ts:skipLibCheck=always
 # use `tsc` for transpiling, even though it's slow.
 common --@aspect_rules_ts//ts:default_to_tsc_transpiler
 
+# Starting in bazel 7.0, workspaces can be disabled in preparation for being
+# completely removed by bazel 9.0. This project requires bzlmod and to ensure
+# corrrect CI behavior, we ensure workspaces are disabled for all bazel
+# commands.
+#
+# See https://blog.bazel.build/2023/07/24/whats-new-with-bzlmod.html#high-level-roadmap-for-the-future
+common --enable_bzlmod
+common --noenable_workspace
+
 # Load any settings & overrides specific to the current user from `.aspect/bazelrc/user.bazelrc`.
 # This file should appear in `.gitignore` so that settings are not shared with team members. This
 # should be last statement in this config so the user configuration is able to overwrite flags from

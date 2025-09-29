@@ -1,1 +1,10 @@
 import %workspace%/../../tools/preset.bazelrc
+
+# Starting in bazel 7.0, workspaces can be disabled in preparation for being
+# completely removed by bazel 9.0. This project requires bzlmod and to ensure
+# corrrect CI behavior, we ensure workspaces are disabled for all bazel
+# commands.
+#
+# See https://blog.bazel.build/2023/07/24/whats-new-with-bzlmod.html#high-level-roadmap-for-the-future
+common --enable_bzlmod
+common --noenable_workspace
