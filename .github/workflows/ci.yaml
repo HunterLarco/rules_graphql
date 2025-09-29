@@ -42,6 +42,7 @@ jobs:
   # be used to gate PR merges on "all matrix jobs were successful".
   conclusion:
     needs:
+      - format
       - tests
     runs-on: ubuntu-latest
     if: always()
