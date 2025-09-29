@@ -39,7 +39,7 @@ _ATTRS = {
         default = False,
         doc = """If enabled, any types unreachable from GraphQL's root types
         (Query, Mutation, and Subscription) will be pruned.
-        """
+        """,
     ),
     "_graphql_buddy": attr.label(
         executable = True,
