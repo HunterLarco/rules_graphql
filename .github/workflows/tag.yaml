@@ -58,7 +58,8 @@ jobs:
       tag_name: ${{ needs.tag.outputs.new-tag-version }}
     secrets:
       publish_token: ${{ secrets.BCR_PUBLISH_TOKEN }}
-    if: needs.tag.outputs.new-tag == 'true' && needs.tag.outputs.new-tag-version-type != 'major' && needs.tag.outputs.recently-tagged != 'true'
+    if: needs.tag.outputs.new-tag == 'true' && needs.tag.outputs.new-tag-version-type
+      != 'major' && needs.tag.outputs.recently-tagged != 'true'
     permissions:
       contents: write
       id-token: write
