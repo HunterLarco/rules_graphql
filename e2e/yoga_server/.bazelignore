@@ -1,0 +1,6 @@
+# Ignore external node dependencies (even if they include BUILD files we
+# shouldn't consider those part of our monorepo, instead we rely on
+# //:node_modules for access to npm dependencies.
+#
+# See https://github.com/aspect-build/rules_js
+node_modules/

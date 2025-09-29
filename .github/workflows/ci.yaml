@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  rules_graphql:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Aspect CLI can be installed with bazelisk and will replace the `bazel`
+      # command.
+      #
+      # See https://docs.aspect.build/cli/#bazelisk-macos--linux
+      - uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          # Avoid downloading Bazel every time.
+          bazelisk-cache: true
+          # Store build cache per workflow.
+          disk-cache: ${{ github.workflow }}}
+          # Share repository cache between workflows.
+          repository-cache: true
+
+      - run: bazel run format.check
+      - run: bazel build tools/... graphql/... examples/...
+      - run: bazel test tools/...
+
+  docs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Aspect CLI can be installed with bazelisk and will replace the `bazel`
+      # command.
+      #
+      # See https://docs.aspect.build/cli/#bazelisk-macos--linux
+      - uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          module-root: docs
+          # Avoid downloading Bazel every time.
+          bazelisk-cache: true
+          # Store build cache per workflow.
+          disk-cache: ${{ github.workflow }}}
+          # Share repository cache between workflows.
+          repository-cache: true
+
+      - run: bazel build //...
+      - run: bazel test //...
