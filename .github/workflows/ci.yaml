@@ -40,6 +40,8 @@ jobs:
     with:
       folders: |
         ["docs", "e2e/bzlmod"]
+      exclude: |
+        [{"bzlmodEnabled": false}]
 
   # For branch protection settings, this job provides a "stable" name that can
   # be used to gate PR merges on "all matrix jobs were successful".
