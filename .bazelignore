@@ -1,3 +1,7 @@
+# Nested bazel workspaces manage their own dependencies.
+e2e
+docs
+
 # Ignore external node dependencies (even if they include BUILD files we
 # shouldn't consider those part of our monorepo, instead we rely on
 # //:node_modules for access to npm dependencies.

@@ -11,35 +11,11 @@ permissions:
   contents: read
 
 jobs:
-  rules_graphql:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # Aspect CLI can be installed with bazelisk and will replace the `bazel`
-      # command.
-      #
-      # See https://docs.aspect.build/cli/#bazelisk-macos--linux
-      - uses: bazel-contrib/setup-bazel@0.15.0
-        with:
-          # Avoid downloading Bazel every time.
-          bazelisk-cache: true
-          # Store build cache per workflow.
-          disk-cache: ${{ github.workflow }}}
-          # Share repository cache between workflows.
-          repository-cache: true
-
-      - run: bazel run format.check
-      - run: bazel build tools/... graphql/... examples/...
-      - run: bazel test tools/...
-
   tests:
     uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7.2.3
     with:
       folders: |
-        ["docs", "e2e/bzlmod"]
+        [".", "docs", "e2e/bzlmod"]
       exclude: |
         [{"bzlmodEnabled": false}]
 
@@ -47,7 +23,6 @@ jobs:
   # be used to gate PR merges on "all matrix jobs were successful".
   conclusion:
     needs:
-      - rules_graphql
       - tests
     runs-on: ubuntu-latest
     if: always()
