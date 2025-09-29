@@ -36,7 +36,7 @@ jobs:
       - run: bazel test tools/...
 
   tests:
-    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v6
+    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7.2.3
     with:
       folders: |
         ["docs", "e2e/bzlmod"]
