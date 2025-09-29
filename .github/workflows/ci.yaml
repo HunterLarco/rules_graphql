@@ -62,7 +62,7 @@ jobs:
       - run: bazel build //...
       - run: bazel test //...
 
-  e2e/bzlmod:
+  e2e-bzlmod:
     runs-on: ubuntu-latest
     defaults:
       run:
