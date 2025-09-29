@@ -1,4 +1,4 @@
-"hunterlarco/rules_graphql"
+"HunterLarco/rules_graphql"
 
 module(
     name = "rules_graphql",

@@ -4,10 +4,10 @@
         {
             "name": "Hunter John Larco",
             "email": "hunter@larcolabs.com",
-            "github": "hunterlarco"
+            "github": "HunterLarco"
         }
     ],
-    "repository": ["github:hunterlarco/rules_graphql"],
+    "repository": ["github:HunterLarco/rules_graphql"],
     "versions": [],
     "yanked_versions": {}
 }

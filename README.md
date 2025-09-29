@@ -15,7 +15,7 @@ build rules we suggest visiting with [Bazel Central Registry] or consider
 ## Installation
 
 Follow instructions from the release you wish to use:
-<https://github.com/hunterlarco/rules_graphql/releases>.
+<https://github.com/HunterLarco/rules_graphql/releases>.
 
 ## Usage
 
