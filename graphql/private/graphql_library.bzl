@@ -1,5 +1,75 @@
 load(":graphql_info.bzl", "GRAPHQL_EXTENSIONS_WITH_PREFIX", "GraphqlInfo", "gather_all_dependencies")
 
+_DOC = """
+js_library groups together GraphQL sources and arranges them and their
+transitive dependencies into a provided `GraphqlInfo`. It additionally validates
+syntax and ensures all symbols are defined for all files in "srcs".
+"""
+
+_ATTRS = {
+    "srcs": attr.label_list(
+        allow_files = GRAPHQL_EXTENSIONS_WITH_PREFIX,
+        doc = """Source files that are included in this library.
+
+        This includes your checked-in code and any generated GraphQL files.
+        """,
+    ),
+    "deps": attr.label_list(
+        providers = [GraphqlInfo],
+        doc = """Dependencies of this target.
+
+        This may include other graphql_library targets or other targets that
+        provide GraphqlInfo.
+
+        The transitive sources & runfiles of targets in the `deps` attribute are
+        added to the runfiles of this target.
+        """,
+    ),
+    "aliases": attr.string_dict(
+        doc = """A series of entries which re-map imports to lookup locations.
+
+        Keys are the aliases used in import statements, values are the paths
+        they resolve to. Uses the same semantics as
+        [`tsconfig.json#paths`](https://www.typescriptlang.org/tsconfig/#paths).
+
+        Supports two patterns:
+
+        1. Exact mapping: Maps a specific alias to a specific file
+           `'@user': '/path/to/user.graphql'`
+        2. Wildcard mapping: Maps a prefix pattern to a directory pattern using '*'
+           2a. The '*' is replaced with the remainder of the import path
+               `'@models/*': '/path/to/models/*'`
+           2b. Maps to a directory without wildcard expansion
+               `'@types/*': '/path/to/types'`
+
+        For example:
+   
+        ```starlark
+        {
+          # Exact mapping
+          "@schema": "project/schema/main.graphql",
+     
+          # Wildcard mapping with expansion
+          "@models/*": "project/graphql/models/*",
+     
+          # Wildcard mapping without expansion
+          "@types/*": "project/graphql/types.graphql",
+        }
+        ```
+       
+        Import examples:
+        - `#import User from "@schema"` → `/project/schema/main.graphql`
+        - `#import User from "@models/user.graphql"` → `/project/graphql/models/user.graphql`
+        - `#import User from "@types/user.graphql"` → `/project/graphql/types.graphql`
+        """,
+    ),
+    "_graphql_buddy": attr.label(
+        executable = True,
+        cfg = "exec",
+        default = Label("//graphql/private:graphql-buddy"),
+    ),
+}
+
 def _graphql_library_implementation(ctx):
     # Collect a list of all transitive dependencies.
 
@@ -58,16 +128,8 @@ def _graphql_library_implementation(ctx):
     ]
 
 graphql_library = rule(
+    doc = _DOC,
     implementation = _graphql_library_implementation,
     provides = [DefaultInfo, GraphqlInfo],
-    attrs = {
-        "srcs": attr.label_list(allow_files = GRAPHQL_EXTENSIONS_WITH_PREFIX),
-        "deps": attr.label_list(providers = [GraphqlInfo]),
-        "aliases": attr.string_dict(),
-        "_graphql_buddy": attr.label(
-            executable = True,
-            cfg = "exec",
-            default = "//graphql/private:graphql-buddy",
-        ),
-    },
+    attrs = _ATTRS,
 )

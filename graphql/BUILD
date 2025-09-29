@@ -10,7 +10,7 @@ bzl_library(
     deps = [
         "//graphql/private:graphql_bundle",
         "//graphql/private:graphql_library",
-    ]
+    ],
 )
 
 bzl_library(
@@ -18,5 +18,5 @@ bzl_library(
     srcs = ["providers.bzl"],
     deps = [
         "//graphql/private:graphql_info",
-    ]
+    ],
 )
