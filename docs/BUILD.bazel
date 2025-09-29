@@ -1,0 +1,13 @@
+load(":docs.bzl", "stardoc_with_diff_test", "update_docs")
+
+stardoc_with_diff_test(
+    name = "graphql_bundle",
+    bzl_library_target = "@rules_graphql//graphql/private:graphql_bundle",
+)
+
+stardoc_with_diff_test(
+    name = "graphql_library",
+    bzl_library_target = "@rules_graphql//graphql/private:graphql_library",
+)
+
+update_docs(name = "update")
