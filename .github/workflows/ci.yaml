@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  rules_graphql:
+  format:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,40 +24,52 @@ jobs:
       # See https://docs.aspect.build/cli/#bazelisk-macos--linux
       - uses: bazel-contrib/setup-bazel@0.15.0
         with:
-          # Avoid downloading Bazel every time.
           bazelisk-cache: true
-          # Store build cache per workflow.
           disk-cache: ${{ github.workflow }}}
-          # Share repository cache between workflows.
           repository-cache: true
 
       - run: bazel run format.check
-      - run: bazel build tools/... graphql/... examples/...
-      - run: bazel test tools/...
+      - run: bazel test //tools:preset.update_test
 
-  docs:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: docs
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # Aspect CLI can be installed with bazelisk and will replace the `bazel`
-      # command.
+  rules_graphql-tests:
+    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7.2.3
+    with:
+      folders: |
+        ["."]
+      exclude: |
+        [{"bzlmodEnabled": false}]
+      # bazelrc-preset is by design pinned to the bazel version running it.
+      # Because our tests run a matrix it is guaranteed to fail on at least one
+      # bazel version. We skip it here and instead run it in our format job as
+      # the preset test is conceptually similar to a lint/format check.
       #
-      # See https://docs.aspect.build/cli/#bazelisk-macos--linux
-      - uses: bazel-contrib/setup-bazel@0.15.0
-        with:
-          module-root: docs
-          # Avoid downloading Bazel every time.
-          bazelisk-cache: true
-          # Store build cache per workflow.
-          disk-cache: ${{ github.workflow }}}
-          # Share repository cache between workflows.
-          repository-cache: true
+      # See https://github.com/bazel-contrib/bazelrc-preset.bzl
+      bazel_test_command: bazel test //... -- -//tools:preset.update_test
 
-      - run: bazel build //...
-      - run: bazel test //...
+  e2e-tests:
+    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7.2.3
+    with:
+      folders: |
+        ["e2e/bzlmod"]
+      exclude: |
+        [{"bzlmodEnabled": false}]
+
+  # For branch protection settings, this job provides a "stable" name that can
+  # be used to gate PR merges on "all matrix jobs were successful".
+  conclusion:
+    needs:
+      - format
+      - rules_graphql-tests
+      - e2e-tests
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5
+      - name: report success
+        if: ${{ env.WORKFLOW_CONCLUSION == 'success' }}
+        working-directory: /tmp
+        run: echo ${{ env.WORKFLOW_CONCLUSION }} && exit 0
+      - name: report failure
+        if: ${{ env.WORKFLOW_CONCLUSION == 'failure' }}
+        working-directory: /tmp
+        run: echo ${{ env.WORKFLOW_CONCLUSION }} && exit 1

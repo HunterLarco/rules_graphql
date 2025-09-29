@@ -1,0 +1,9 @@
+type PublicUser {
+  id: ID!
+
+  dateCreated: DateTime!
+
+  displayName: String!
+}
+
+scalar DateTime

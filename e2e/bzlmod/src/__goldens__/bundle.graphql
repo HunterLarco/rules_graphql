@@ -1,0 +1,20 @@
+type Query {
+  me: CurrentUser
+  users: [PublicUser!]!
+}
+
+type CurrentUser {
+  id: ID!
+  dateCreated: DateTime!
+  displayName: String!
+  fullName: String!
+  email: String!
+}
+
+scalar DateTime
+
+type PublicUser {
+  id: ID!
+  dateCreated: DateTime!
+  displayName: String!
+}
