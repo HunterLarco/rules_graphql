@@ -25,8 +25,12 @@ graphql_library(
 )
 
 build_test(
-  name = "library_test",
-  targets = [":CurrentUser", ":PublicUser", ":Query"],
+    name = "library_test",
+    targets = [
+        ":CurrentUser",
+        ":PublicUser",
+        ":Query",
+    ],
 )
 
 graphql_bundle(
@@ -36,18 +40,18 @@ graphql_bundle(
 )
 
 build_test(
-  name = "bundle_test.build",
-  targets = [":bundle"],
+    name = "bundle_test.build",
+    targets = [":bundle"],
 )
 
 assert_outputs(
-  name = "bundle_test.outputs",
-  actual = ":bundle",
-  expected = ["src/bundle.graphql"],
+    name = "bundle_test.outputs",
+    actual = ":bundle",
+    expected = ["src/bundle.graphql"],
 )
 
 diff_test(
-  name = "bundle_test.contents",
-  file1 = ":bundle",
-  file2 = "__goldens__/bundle.graphql",
+    name = "bundle_test.contents",
+    file1 = ":bundle",
+    file2 = "__goldens__/bundle.graphql",
 )
