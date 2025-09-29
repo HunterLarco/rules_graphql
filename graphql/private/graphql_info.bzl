@@ -14,12 +14,10 @@ def gather_direct_sources(targets):
     """Given a list of targets, extracts all direct graphql schema files.
 
     Args:
-      targets:
-        A list of `GraphQL` targets (typically from `graphql_library` or graphql
-        schema files).
+        targets: A list of `GraphQL` targets (typically from `graphql_library` or graphql schema files).
 
     Returns:
-      A list of file targets (source or generated).
+        A list of file targets (source or generated).
     """
 
     sources = []
@@ -39,12 +37,10 @@ def gather_all_dependencies(targets):
     """Given a list of targets, extracts all direct and transitively required graphql schema files.
 
     Args:
-      targets:
-        A list of `GraphQL` targets (typically from `graphql_library` or graphql
-        schema files).
+        targets: A list of `GraphQL` targets (typically from `graphql_library` or graphql schema files).
 
     Returns:
-      A list of file targets (source or generated).
+        A list of file targets (source or generated).
     """
 
     dependencies = []
