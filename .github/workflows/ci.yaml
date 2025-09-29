@@ -11,6 +11,25 @@ permissions:
   contents: read
 
 jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Aspect CLI can be installed with bazelisk and will replace the `bazel`
+      # command.
+      #
+      # See https://docs.aspect.build/cli/#bazelisk-macos--linux
+      - uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}}
+          repository-cache: true
+
+      - run: bazel run format.check
+
   tests:
     uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7.2.3
     with:
