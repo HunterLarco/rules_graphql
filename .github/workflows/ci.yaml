@@ -35,56 +35,28 @@ jobs:
       - run: bazel build tools/... graphql/... examples/...
       - run: bazel test tools/...
 
-  docs:
+  tests:
+    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v6
+    with:
+      folders:
+        - "docs"
+        - "e2e/bzlmod"
+
+  # For branch protection settings, this job provides a "stable" name that can
+  # be used to gate PR merges on "all matrix jobs were successful".
+  conclusion:
+    needs:
+      - rules_graphql
+      - tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: docs
+    if: always()
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # Aspect CLI can be installed with bazelisk and will replace the `bazel`
-      # command.
-      #
-      # See https://docs.aspect.build/cli/#bazelisk-macos--linux
-      - uses: bazel-contrib/setup-bazel@0.15.0
-        with:
-          module-root: docs
-          # Avoid downloading Bazel every time.
-          bazelisk-cache: true
-          # Store build cache per workflow.
-          disk-cache: ${{ github.workflow }}}
-          # Share repository cache between workflows.
-          repository-cache: true
-
-      - run: bazel build //...
-      - run: bazel test //...
-
-  e2e-bzlmod:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: e2e/bzlmod
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # Aspect CLI can be installed with bazelisk and will replace the `bazel`
-      # command.
-      #
-      # See https://docs.aspect.build/cli/#bazelisk-macos--linux
-      - uses: bazel-contrib/setup-bazel@0.15.0
-        with:
-          module-root: e2e/bzlmod
-          # Avoid downloading Bazel every time.
-          bazelisk-cache: true
-          # Store build cache per workflow.
-          disk-cache: ${{ github.workflow }}}
-          # Share repository cache between workflows.
-          repository-cache: true
-
-      - run: bazel build //...
-      - run: bazel test //...
+      - uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5
+      - name: report success
+        if: ${{ env.WORKFLOW_CONCLUSION == 'success' }}
+        working-directory: /tmp
+        run: echo ${{ env.WORKFLOW_CONCLUSION }} && exit 0
+      - name: report failure
+        if: ${{ env.WORKFLOW_CONCLUSION == 'failure' }}
+        working-directory: /tmp
+        run: echo ${{ env.WORKFLOW_CONCLUSION }} && exit 1
