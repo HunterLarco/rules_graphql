@@ -2,7 +2,7 @@
 
 module(
     name = "rules_graphql",
-    bazel_compatibility = [">=6.0.0"],
+    bazel_compatibility = [">=7.0.0"],
     compatibility_level = 1,
 )
 

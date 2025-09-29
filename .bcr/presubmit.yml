@@ -4,7 +4,6 @@ bcr_test_module:
     bazel:
       - '8.x'
       - '7.x'
-      - '6.x'
     platform:
       - 'debian10'
       - 'macos'
