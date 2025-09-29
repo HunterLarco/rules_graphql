@@ -61,3 +61,30 @@ jobs:
 
       - run: bazel build //...
       - run: bazel test //...
+
+  e2e/bzlmod:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: e2e/bzlmod
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Aspect CLI can be installed with bazelisk and will replace the `bazel`
+      # command.
+      #
+      # See https://docs.aspect.build/cli/#bazelisk-macos--linux
+      - uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          module-root: e2e/bzlmod
+          # Avoid downloading Bazel every time.
+          bazelisk-cache: true
+          # Store build cache per workflow.
+          disk-cache: ${{ github.workflow }}}
+          # Share repository cache between workflows.
+          repository-cache: true
+
+      - run: bazel build //...
+      - run: bazel test //...
