@@ -38,9 +38,8 @@ jobs:
   tests:
     uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v6
     with:
-      folders:
-        - "docs"
-        - "e2e/bzlmod"
+      folders: |
+        ["docs", "e2e/bzlmod"]
 
   # For branch protection settings, this job provides a "stable" name that can
   # be used to gate PR merges on "all matrix jobs were successful".
