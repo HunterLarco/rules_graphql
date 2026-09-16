@@ -16,6 +16,21 @@ bzl_library(
 )
 
 bzl_library(
+    name = "graphql_document_info",
+    srcs = ["graphql_document_info.bzl"],
+    deps = [":graphql_info"],
+)
+
+bzl_library(
+    name = "graphql_document_library",
+    srcs = ["graphql_document_library.bzl"],
+    deps = [
+        ":graphql_document_info",
+        ":graphql_info",
+    ],
+)
+
+bzl_library(
     name = "graphql_info",
     srcs = ["graphql_info.bzl"],
 )

@@ -1,0 +1,4 @@
+fragment PublicUserFields on PublicUser {
+  id
+  displayName
+}

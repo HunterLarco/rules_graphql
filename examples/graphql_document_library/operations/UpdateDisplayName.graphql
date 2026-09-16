@@ -1,0 +1,6 @@
+mutation UpdateDisplayName($displayName: String!) {
+  updateDisplayName(displayName: $displayName) {
+    id
+    displayName
+  }
+}

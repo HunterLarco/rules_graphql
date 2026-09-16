@@ -6,6 +6,11 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    name = "graphql_document_library",
+    bzl_library_target = "@rules_graphql//graphql/private:graphql_document_library",
+)
+
+stardoc_with_diff_test(
     name = "graphql_library",
     bzl_library_target = "@rules_graphql//graphql/private:graphql_library",
 )
