@@ -1,23 +1,21 @@
-load(":graphql_document_info.bzl", "GraphqlDocumentInfo", "gather_document_dependencies")
-load(":graphql_info.bzl", "GRAPHQL_EXTENSIONS_WITH_PREFIX", "GraphqlInfo", "gather_all_dependencies", "gather_direct_sources")
+load(
+    ":graphql_document_info.bzl",
+    "GraphqlDocumentInfo",
+    gather_all_document_dependencies = "gather_all_dependencies",
+)
+load(
+    ":graphql_info.bzl",
+    "GRAPHQL_EXTENSIONS_WITH_PREFIX",
+    "GraphqlInfo",
+    gather_all_schema_dependencies = "gather_all_dependencies",
+    gather_direct_schema_sources = "gather_direct_sources",
+)
 
 _DOC = """
-graphql_document_library groups together GraphQL documents (queries, mutations,
-subscriptions, and fragments) and validates them against a schema. It arranges
-the documents and their transitive fragment dependencies into a provided
-`GraphqlDocumentInfo`.
-
-Every document in "srcs" is checked for valid syntax and validated against the
-schema formed by parsing all targets in "schema" together, ensuring each
-referenced field, argument, and type exists. Fragments defined in other
-documents are pulled in with `#import`, the same mechanism used by schema files.
-
-Fragment libraries may be validated against a narrower schema than the
-operations that use them. For example a shared fragment package might only
-depend on the `users` portion of a graph while an operation importing it is
-validated against the complete graph. For this reason the schema of a target and
-the schema of its "deps" are never required to match; a fragment is re-validated
-in the context of each operation that imports it.
+graphql_document_library groups together GraphQL documents (operations and
+fragments) and arranges them and their transitive dependencies into a provided
+`GraphqlDocumentInfo`. It additionally validates syntax and ensures all
+documents match the provided schema.
 """
 
 _ATTRS = {
@@ -41,10 +39,10 @@ _ATTRS = {
         doc = """The schema to validate documents against.
 
         Accepts schema files, graphql_library targets, graphql_bundle targets,
-        or other targets that provide GraphqlInfo. All targets are parsed
-        together into a single schema, exactly as `graphql_bundle` would merge
-        them: direct sources of each target are entry points and their
-        transitive dependencies are made available for `#import` resolution.
+        or other targets that provide GraphqlInfo.
+
+        The transitive schema of targets in the `schema` attribute are added to
+        the runfiles of this target.
         """,
     ),
     "deps": attr.label_list(
@@ -55,11 +53,8 @@ _ATTRS = {
         targets that provide GraphqlDocumentInfo. Typically these are fragment
         libraries which documents in "srcs" `#import`.
 
-        Dependencies need not share this target's "schema". A fragment library
-        may be validated against a subset of the schema used here.
-
-        The transitive sources & runfiles of targets in the `deps` attribute are
-        added to the runfiles of this target. Their schema is not.
+        The transitive sources and schema of targets in the `deps` attribute are
+        added to the runfiles of this target.
         """,
     ),
     "aliases": attr.string_dict(
@@ -80,17 +75,10 @@ _ATTRS = {
 }
 
 def _graphql_document_library_implementation(ctx):
-    # Collect the schema. Entry points are passed to the validator and the
-    # transitive closure is made available so that `#import` resolves.
+    # Collect a list of all transitive dependencies
 
-    schema_sources = gather_direct_sources(ctx.attr.schema)
-    schema_transitive_sources = gather_all_dependencies(ctx.attr.schema)
-
-    # Collect fragment dependencies. Only document files are gathered; the
-    # schema a dependency was validated against is intentionally excluded so
-    # that every symbol used here must exist in this target's own schema.
-
-    transitive_deps = gather_document_dependencies(ctx.attr.deps)
+    transitive_schema = gather_all_schema_dependencies(ctx.attr.schema)
+    transitive_deps = gather_all_document_dependencies(ctx.attr.deps)
 
     # Run validation.
 
@@ -98,7 +86,7 @@ def _graphql_document_library_implementation(ctx):
 
     arguments = ctx.actions.args()
     arguments.add("validate")
-    arguments.add_all(schema_sources)
+    arguments.add_all(gather_direct_schema_sources(ctx.attr.schema))
     arguments.add("--operations")
     arguments.add_all(ctx.files.srcs)
     arguments.add("--stamp", validation_output)
@@ -112,7 +100,7 @@ def _graphql_document_library_implementation(ctx):
         arguments = [arguments],
         inputs = depset(
             ctx.files.srcs,
-            transitive = [schema_transitive_sources, transitive_deps],
+            transitive = [transitive_schema, transitive_deps],
         ),
         outputs = [validation_output],
         env = {
@@ -136,20 +124,16 @@ def _graphql_document_library_implementation(ctx):
                 # runfiles (included at runtime) it needs to be here as a file
                 # exported by the rule.
                 ctx.files.srcs + [validation_output],
-                transitive = [transitive_deps],
+                transitive = [transitive_schema, transitive_deps],
             ),
             runfiles = ctx.runfiles(
                 files = ctx.files.srcs,
-                transitive_files = transitive_deps,
+                transitive_files = depset(transitive = [transitive_schema, transitive_deps]),
             ),
         ),
         GraphqlDocumentInfo(
             direct_sources = depset(ctx.files.srcs),
-            transitive_sources = transitive_deps,
-            schema = GraphqlInfo(
-                direct_sources = schema_sources,
-                transitive_sources = schema_transitive_sources,
-            ),
+            transitive_sources = depset(transitive = [transitive_schema, transitive_deps]),
         ),
     ]
 

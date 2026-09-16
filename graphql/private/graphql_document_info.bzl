@@ -8,33 +8,52 @@ GraphqlDocumentInfo = provider(
     """,
     fields = {
         "direct_sources": "Depset of document files (operations and fragments) which are directly exported by the target.",
-        "transitive_sources": "Depset of document files which the target relies on either directly or transitively, such as imported fragments.",
-        "schema": """A `GraphqlInfo` describing the schema these documents were
-        validated against. Its `direct_sources` are the schema entry points and
-        its `transitive_sources` are every schema file reachable from them.
-
-        This describes only this target's own schema. Fragment dependencies may
-        have been validated against a different (typically narrower) schema.
-        """,
+        "transitive_sources": "Depset of files which the target relies on either directly or transitively, such as imported fragments and schema.",
     },
 )
 
-def gather_document_dependencies(targets):
-    """Given a list of document targets, extracts all direct and transitively required document files.
+def gather_direct_sources(targets):
+    """Given a list of targets, extracts all direct graphql document files.
 
     Args:
-        targets: A list of targets providing `GraphqlDocumentInfo` (typically from `graphql_document_library`).
+        targets: A list of `GraphQL` targets (typically from `graphql_document_library` or graphql document files).
 
     Returns:
-        A depset of file targets (source or generated).
+        A list of file targets (source or generated).
+    """
+
+    sources = []
+    for target in targets:
+        if GraphqlDocumentInfo in target:
+            graphql_info = target[GraphqlDocumentInfo]
+            sources.append(graphql_info.direct_sources)
+        elif DefaultInfo in target:
+            default_info = target[DefaultInfo]
+            sources.append(default_info.files)
+        else:
+            fail("Unsure how to gather target '{}'".format(target))
+
+    return depset(transitive = sources)
+
+def gather_all_dependencies(targets):
+    """Given a list of targets, extracts all direct and transitively required graphql document files.
+
+    Args:
+        targets: A list of `GraphQL` targets (typically from `graphql_document_library` or graphql document files).
+
+    Returns:
+        A list of file targets (source or generated).
     """
 
     dependencies = []
     for target in targets:
         if GraphqlDocumentInfo in target:
-            document_info = target[GraphqlDocumentInfo]
-            dependencies.append(document_info.direct_sources)
-            dependencies.append(document_info.transitive_sources)
+            graphql_info = target[GraphqlDocumentInfo]
+            dependencies.append(graphql_info.direct_sources)
+            dependencies.append(graphql_info.transitive_sources)
+        elif DefaultInfo in target:
+            default_info = target[DefaultInfo]
+            dependencies.append(default_info.files)
         else:
             fail("Unsure how to gather target '{}'".format(target))
 
