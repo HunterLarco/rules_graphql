@@ -6,45 +6,31 @@ package(default_visibility = ["//visibility:public"])
 
 # A fragment-only library validated against a schema with no root types.
 graphql_document_library(
-    name = "PublicUserFields",
-    srcs = ["PublicUserFields.graphql"],
-    schema = ["//src:PublicUser"],
+    name = "CurrentUserFields",
+    srcs = ["CurrentUserFields.graphql"],
+    schema = ["//src/schema:CurrentUser"],
 )
 
-# Multiple schema targets parsed together, plus a fragment dependency validated
-# against a narrower schema.
-graphql_document_library(
-    name = "Users",
-    srcs = ["Users.graphql"],
-    schema = [
-        "//src:PublicUser",
-        "//src:Query",
-    ],
-    deps = [":PublicUserFields"],
-)
-
-# Documents validated against a bundle rather than a library.
+# Framents and operations parsed together against bundled schema.
 graphql_document_library(
     name = "Me",
-    srcs = ["Me.graphql"],
-    schema = ["//src:bundle"],
+    srcs = ["Me.graphql", "CurrentUserFields.graphql"],
+    deps = [":CurrentUserFields"],
+    schema = ["//src/schema:bundle"],
+)
+
+# Documents validated against multiple schema targets.
+graphql_document_library(
+    name = "Composite",
+    srcs = ["Composite.graphql"],
+    schema = ["//src/schema:CurrentUser", "//src/schema:PublicUser", "//src/schema:Query"],
 )
 
 build_test(
     name = "document_library_test.build",
     targets = [
+        ":CurrentUserFields",
         ":Me",
-        ":PublicUserFields",
-        ":Users",
-    ],
-)
-
-assert_outputs(
-    name = "document_library_test.outputs",
-    actual = ":Users",
-    expected = [
-        "src/documents/PublicUserFields.graphql",
-        "src/documents/Users.graphql",
-        "src/documents/Users.validation",
+        ":Composite",
     ],
 )

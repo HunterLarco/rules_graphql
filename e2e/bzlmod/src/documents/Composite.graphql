@@ -1,0 +1,20 @@
+query Users {
+  me {
+    ...CurrentUserFields
+  }
+
+  users {
+    ...PublicUserFields
+  }
+}
+
+fragment CurrentUserFields on CurrentUser {
+  id
+  displayName
+  email
+}
+
+fragment PublicUserFields on PublicUser {
+  id
+  displayName
+}

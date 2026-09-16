@@ -1,0 +1,5 @@
+fragment CurrentUserFields on CurrentUser {
+  id
+  displayName
+  email
+}
