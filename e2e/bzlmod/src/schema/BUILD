@@ -47,7 +47,7 @@ build_test(
 assert_outputs(
     name = "bundle_test.outputs",
     actual = ":bundle",
-    expected = ["src/bundle.graphql"],
+    expected = ["src/schema/bundle.graphql"],
 )
 
 diff_test(

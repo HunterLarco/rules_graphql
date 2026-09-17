@@ -1,0 +1,8 @@
+#import "./CurrentUser.graphql"
+#import "./PublicUser.graphql"
+
+type Query {
+  me: CurrentUser
+
+  users: [PublicUser!]!
+}

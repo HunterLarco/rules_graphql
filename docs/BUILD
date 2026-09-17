@@ -10,4 +10,9 @@ stardoc_with_diff_test(
     bzl_library_target = "@rules_graphql//graphql/private:graphql_library",
 )
 
+stardoc_with_diff_test(
+    name = "graphql_document_library",
+    bzl_library_target = "@rules_graphql//graphql/private:graphql_document_library",
+)
+
 update_docs(name = "update")

@@ -1,0 +1,7 @@
+#import "./CurrentUserFields.graphql"
+
+query Me {
+  me {
+    ...CurrentUserFields
+  }
+}

@@ -65,10 +65,14 @@ primarily covers two useful responsibilities.
 2. [`graphql_bundle`](./docs/graphql_bundle.md) ~ bundles GraphQL files or
    `graphql_library` targets into a single merged GraphQL file. Supports
    features such as tree-shaking to ensure graphs only contain reachable types.
+3. [`graphql_document_library`](./docs/graphql_document_library.md) ~ validates
+   GraphQL documents (operations and fragments) against a schema, ensuring every
+   referenced field, argument, and type exists.
 
-Critically, both `graphql_library` and `graphql_bundle` contain their GraphQL
-files and required transitive GraphQL dependencies in their runfiles so that
-they can be included as [data dependencies] for most bazel rules—making it easy
-to load GraphQL files into your application with all of their dependencies.
+Critically, `graphql_library`, `graphql_bundle`, and `graphql_document_library`
+contain their GraphQL files and required transitive GraphQL dependencies in
+their runfiles so that they can be included as [data dependencies] for most
+bazel rules—making it easy to load GraphQL files into your application with all
+of their dependencies.
 
 [data dependencies]: https://bazel.build/concepts/dependencies#data-dependencies

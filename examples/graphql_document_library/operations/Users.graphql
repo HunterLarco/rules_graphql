@@ -1,0 +1,7 @@
+#import "../fragments/PublicUserFields.graphql"
+
+query Users {
+  users {
+    ...PublicUserFields
+  }
+}
