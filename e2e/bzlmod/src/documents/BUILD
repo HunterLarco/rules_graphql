@@ -1,6 +1,7 @@
 load("@aspect_bazel_lib//lib:testing.bzl", "assert_outputs")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@rules_graphql//graphql:defs.bzl", "graphql_document_library")
+load(":runfiles_test.bzl", "runfiles_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -40,4 +41,27 @@ build_test(
         ":Me",
         ":Composite",
     ],
+)
+
+# Runfiles carry documents only. Schema is validated against at build time but
+# never shipped at runtime.
+runfiles_test(
+    name = "CurrentUserFields.runfiles_test",
+    expected = ["src/documents/CurrentUserFields.graphql"],
+    target_under_test = ":CurrentUserFields",
+)
+
+runfiles_test(
+    name = "Me.runfiles_test",
+    expected = [
+        "src/documents/CurrentUserFields.graphql",
+        "src/documents/Me.graphql",
+    ],
+    target_under_test = ":Me",
+)
+
+runfiles_test(
+    name = "Composite.runfiles_test",
+    expected = ["src/documents/Composite.graphql"],
+    target_under_test = ":Composite",
 )

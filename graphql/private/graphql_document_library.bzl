@@ -42,8 +42,8 @@ _ATTRS = {
         Accepts schema files, graphql_library targets, graphql_bundle targets,
         or other targets that provide GraphqlInfo.
 
-        The transitive schema of targets in the `schema` attribute are added to
-        the runfiles of this target.
+        The schema is never added to runfiles. Only graphql documents are
+        accessible as runfiles from `graphql_document_library` targets.
         """,
     ),
     "deps": attr.label_list(
@@ -130,19 +130,11 @@ def _graphql_document_library_implementation(ctx):
                 # runfiles (included at runtime) it needs to be here as a file
                 # exported by the rule.
                 ctx.files.srcs + [validation_output],
-                transitive = [
-                    deps_transitive_documents,
-                    deps_transitive_schema,
-                    schema_transitive_schema,
-                ],
+                transitive = [deps_transitive_documents],
             ),
             runfiles = ctx.runfiles(
                 files = ctx.files.srcs,
-                transitive_files = depset(transitive = [
-                    deps_transitive_documents,
-                    deps_transitive_schema,
-                    schema_transitive_schema,
-                ]),
+                transitive_files = deps_transitive_documents,
             ),
         ),
         GraphqlDocumentInfo(
