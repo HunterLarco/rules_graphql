@@ -14,16 +14,23 @@ graphql_document_library(
 # Framents and operations parsed together against bundled schema.
 graphql_document_library(
     name = "Me",
-    srcs = ["Me.graphql", "CurrentUserFields.graphql"],
-    deps = [":CurrentUserFields"],
+    srcs = [
+        "CurrentUserFields.graphql",
+        "Me.graphql",
+    ],
     schema = ["//src/schema:bundle"],
+    deps = [":CurrentUserFields"],
 )
 
 # Documents validated against multiple schema targets.
 graphql_document_library(
     name = "Composite",
     srcs = ["Composite.graphql"],
-    schema = ["//src/schema:CurrentUser", "//src/schema:PublicUser", "//src/schema:Query"],
+    schema = [
+        "//src/schema:CurrentUser",
+        "//src/schema:PublicUser",
+        "//src/schema:Query",
+    ],
 )
 
 build_test(

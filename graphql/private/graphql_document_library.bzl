@@ -1,14 +1,15 @@
 load(
     ":graphql_document_info.bzl",
     "GraphqlDocumentInfo",
-    gather_all_document_dependencies = "gather_all_dependencies",
+    "gather_all_document_dependencies",
+    "gather_all_schema_dependencies",
 )
 load(
     ":graphql_info.bzl",
     "GRAPHQL_EXTENSIONS_WITH_PREFIX",
     "GraphqlInfo",
-    gather_all_schema_dependencies = "gather_all_dependencies",
-    gather_direct_schema_sources = "gather_direct_sources",
+    graphql_info_gather_all_dependencies = "gather_all_dependencies",
+    graphql_info_gather_direct_sources = "gather_direct_sources",
 )
 
 _DOC = """
@@ -77,8 +78,9 @@ _ATTRS = {
 def _graphql_document_library_implementation(ctx):
     # Collect a list of all transitive dependencies
 
-    transitive_schema = gather_all_schema_dependencies(ctx.attr.schema)
-    transitive_deps = gather_all_document_dependencies(ctx.attr.deps)
+    deps_transitive_documents = gather_all_document_dependencies(ctx.attr.deps)
+    deps_transitive_schema = gather_all_schema_dependencies(ctx.attr.deps)
+    schema_transitive_schema = graphql_info_gather_all_dependencies(ctx.attr.schema)
 
     # Run validation.
 
@@ -86,7 +88,7 @@ def _graphql_document_library_implementation(ctx):
 
     arguments = ctx.actions.args()
     arguments.add("validate")
-    arguments.add_all(gather_direct_schema_sources(ctx.attr.schema))
+    arguments.add_all(graphql_info_gather_direct_sources(ctx.attr.schema))
     arguments.add("--operations")
     arguments.add_all(ctx.files.srcs)
     arguments.add("--stamp", validation_output)
@@ -100,7 +102,11 @@ def _graphql_document_library_implementation(ctx):
         arguments = [arguments],
         inputs = depset(
             ctx.files.srcs,
-            transitive = [transitive_schema, transitive_deps],
+            transitive = [
+                deps_transitive_documents,
+                deps_transitive_schema,
+                schema_transitive_schema,
+            ],
         ),
         outputs = [validation_output],
         env = {
@@ -124,16 +130,27 @@ def _graphql_document_library_implementation(ctx):
                 # runfiles (included at runtime) it needs to be here as a file
                 # exported by the rule.
                 ctx.files.srcs + [validation_output],
-                transitive = [transitive_schema, transitive_deps],
+                transitive = [
+                    deps_transitive_documents,
+                    deps_transitive_schema,
+                    schema_transitive_schema,
+                ],
             ),
             runfiles = ctx.runfiles(
                 files = ctx.files.srcs,
-                transitive_files = depset(transitive = [transitive_schema, transitive_deps]),
+                transitive_files = depset(transitive = [
+                    deps_transitive_documents,
+                    deps_transitive_schema,
+                    schema_transitive_schema,
+                ]),
             ),
         ),
         GraphqlDocumentInfo(
             direct_sources = depset(ctx.files.srcs),
-            transitive_sources = depset(transitive = [transitive_schema, transitive_deps]),
+            transitive_sources = deps_transitive_documents,
+            transitive_schema = depset(
+                transitive = [deps_transitive_schema, schema_transitive_schema],
+            ),
         ),
     ]
 
