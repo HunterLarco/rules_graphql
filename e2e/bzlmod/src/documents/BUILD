@@ -1,4 +1,3 @@
-load("@aspect_bazel_lib//lib:testing.bzl", "assert_outputs")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@rules_graphql//graphql:defs.bzl", "graphql_document_library")
 load(":runfiles_test.bzl", "runfiles_test")

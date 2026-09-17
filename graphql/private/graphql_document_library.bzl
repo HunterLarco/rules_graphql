@@ -29,7 +29,7 @@ _ATTRS = {
         Each file may contain operations, fragments, or both. Files must not
         contain schema (type system) definitions.
 
-        This includes your checked-in code and any generated GraphQL files.
+        Sources are always included in the runfiles of this target.
         """,
     ),
     "schema": attr.label_list(
@@ -54,8 +54,8 @@ _ATTRS = {
         targets that provide GraphqlDocumentInfo. Typically these are fragment
         libraries which documents in "srcs" `#import`.
 
-        The transitive sources and schema of targets in the `deps` attribute are
-        added to the runfiles of this target.
+        The transitive sources of targets in the `deps` attribute are added to
+        the runfiles of this target.
         """,
     ),
     "aliases": attr.string_dict(
