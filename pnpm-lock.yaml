@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       graphql-buddy:
-        specifier: 0.1.2
-        version: 0.1.2
+        specifier: 0.1.4
+        version: 0.1.4
 
 packages:
 
@@ -211,8 +211,8 @@ packages:
     resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
     engines: {node: '>=10'}
 
-  graphql-buddy@0.1.2:
-    resolution: {integrity: sha512-HPWD7dKElopoJ+yi3T2DCnHCLlmRb8nNBxUyehCdm7y2401v8akzEKgwlxEpo0c+ujhW9JA9TYWKpVNqXZHzDg==}
+  graphql-buddy@0.1.4:
+    resolution: {integrity: sha512-bk2jy+2cx1qrzTn5JafhcLuutqVQojqD6yhLI5zqb2mfdsbOhLlzopRRPe2GrJNKM6X19XgznAJQa3McpODFpQ==}
     hasBin: true
 
   graphql@16.11.0:
@@ -629,7 +629,7 @@ snapshots:
       merge2: 1.4.1
       slash: 3.0.0
 
-  graphql-buddy@0.1.2:
+  graphql-buddy@0.1.4:
     dependencies:
       '@commander-js/extra-typings': 14.0.0(commander@14.0.1)
       '@graphql-tools/graphql-file-loader': 8.1.2(graphql@16.11.0)
