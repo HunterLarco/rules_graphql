@@ -1,0 +1,20 @@
+"""
+Fetches the current user, optionally including their email.
+"""
+query Described(
+  "Whether to include the current user's email."
+  $includeEmail: Boolean!
+) {
+  me {
+    ...DescribedFields
+    email @include(if: $includeEmail)
+  }
+}
+
+"""
+The fields always selected on the current user.
+"""
+fragment DescribedFields on CurrentUser {
+  id
+  displayName
+}
