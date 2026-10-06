@@ -40,6 +40,13 @@ graphql_document_library(
     ],
 )
 
+# Descriptions on operations, variables, and fragments (GraphQL September 2025).
+graphql_document_library(
+    name = "Described",
+    srcs = ["Described.graphql"],
+    schema = ["//src/schema:Query"],
+)
+
 build_test(
     name = "document_library_test.build",
     targets = [
@@ -47,6 +54,7 @@ build_test(
         ":Me.srcsOnly",
         ":Me.withDeps",
         ":Composite",
+        ":Described",
     ],
 )
 
