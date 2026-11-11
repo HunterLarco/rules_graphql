@@ -5,6 +5,7 @@ schema {
 type Query {
   me: CurrentUser
   users: [PublicUser!]!
+  user(lookup: UserLookupInput!): PublicUser
 }
 
 type CurrentUser {
@@ -21,4 +22,10 @@ type PublicUser {
   id: ID!
   dateCreated: DateTime!
   displayName: String!
+}
+
+"""Uses the built-in `@oneOf` directive without declaring it."""
+input UserLookupInput @oneOf {
+  id: ID
+  email: String
 }

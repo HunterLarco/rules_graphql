@@ -16,11 +16,17 @@ graphql_library(
 )
 
 graphql_library(
+    name = "UserLookupInput",
+    srcs = ["UserLookupInput.graphql"],
+)
+
+graphql_library(
     name = "Query",
     srcs = ["Query.graphql"],
     deps = [
         ":CurrentUser",
         ":PublicUser",
+        ":UserLookupInput",
     ],
 )
 
@@ -30,6 +36,7 @@ build_test(
         ":CurrentUser",
         ":PublicUser",
         ":Query",
+        ":UserLookupInput",
     ],
 )
 

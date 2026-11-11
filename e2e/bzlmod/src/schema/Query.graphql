@@ -1,8 +1,11 @@
 #import "./CurrentUser.graphql"
 #import "./PublicUser.graphql"
+#import "./UserLookupInput.graphql"
 
 type Query {
   me: CurrentUser
 
   users: [PublicUser!]!
+
+  user(lookup: UserLookupInput!): PublicUser
 }
