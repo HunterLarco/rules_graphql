@@ -1,0 +1,7 @@
+"""
+Uses the built-in `@oneOf` directive without declaring it.
+"""
+input UserLookupInput @oneOf {
+  id: ID
+  email: String
+}

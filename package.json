@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "graphql-buddy": "0.1.7"
+    "graphql-buddy": "0.1.8"
   },
   "pnpm": {
     "onlyBuiltDependencies": []
