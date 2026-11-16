@@ -9,6 +9,11 @@ docs/*.md linguist-generated=true
 # You may want to add additional exclusions for folders or files that users don't need.
 examples export-ignore
 
+# Our .bazeliskrc points Bazelisk at Aspect's CDN. BCR presubmit overrides
+# USE_BAZEL_VERSION with plain Bazel versions (e.g. 7.7.2), which don't exist
+# there, so the download 404s. Keep it out of the release archive.
+.bazeliskrc export-ignore
+
 # Occasionally there's a need to "stamp" the release version into a file
 # See https://blog.aspect.build/releasing-bazel-rulesets-rust for details if you need this.
 # mylang/version.bzl export-subst
